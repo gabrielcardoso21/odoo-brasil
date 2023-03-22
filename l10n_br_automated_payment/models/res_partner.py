@@ -27,7 +27,7 @@ class ResPartner(models.Model):
                 'cpf_cnpj': re.sub('[^0-9]', '', commercial_part.cnpj_cpf or ''),
                 'zip_code': re.sub('[^0-9]', '', commercial_part.zip or ''),
                 'number': commercial_part.street_number,
-                'street': commercial_part.street,
+                'street': commercial_part.street_name,
                 'city': commercial_part.city_id.name,
                 'state': commercial_part.state_id.code,
                 'district': commercial_part.district or '',
