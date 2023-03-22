@@ -1,6 +1,7 @@
 <odoo>
 
     <record id="view_account_move_form" model="ir.ui.view" >
+        <field name="name">account.move.form</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
@@ -16,15 +17,15 @@
                             <field name="date_maturity"/>
                             <field name="amount"/>
                             <field name="transaction_url" widget="url"/>
-                            <button name="action_verify_transaction" string="Verificar" type="object" 
+                            <button name="action_verify_transaction" string="Verificar" type="object"
                                 class="btn btn-success btn-sm" />
-                            <button name="action_cancel_transaction" string="Cancelar" type="object" 
+                            <button name="action_cancel_transaction" string="Cancelar" type="object"
                                 class="btn btn-danger btn-sm" confirm="Confirma o cancelamento?" />
                         </tree>
                     </field>
                 </page>
             </page>
         </field>
-    </record> 
+    </record>
 
 </odoo>
