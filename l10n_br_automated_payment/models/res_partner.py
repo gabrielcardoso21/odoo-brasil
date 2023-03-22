@@ -59,7 +59,7 @@ class ResPartner(models.Model):
                              for x in error.items()])
 
                     raise UserError(msg)
-                partner.iugu_id = data['id']
+                partner.iugu_id = data.json()['id']
             else:
                 data = requests.post(
                     url=('https://api.iugu.com/v1/customers/%s?api_token=%s' % (partner.iugu_id, token)),
