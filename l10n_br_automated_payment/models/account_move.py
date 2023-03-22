@@ -75,7 +75,7 @@ class AccountMove(models.Model):
         iugu.config(token=token)
         iugu_invoice_api = iugu.Invoice()
 
-        for moveline in self.receivable_move_line_ids:
+        for moveline in self.financial_move_line_ids:
             self.partner_id.action_synchronize_iugu()
 
             iugu_p = self.env['payment.acquirer'].search([('provider', '=', 'iugu')])
