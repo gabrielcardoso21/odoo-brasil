@@ -18,7 +18,7 @@
     ],
     'depends': [
         'account',
-        'l10n_br_base_address',
+        'l10n_br_base',
     ],
     'external_dependencies': {
         'python': [
