@@ -18,6 +18,7 @@
     ],
     'depends': [
         'account',
+        'payment',
         'l10n_br_base',
     ],
     'external_dependencies': {
