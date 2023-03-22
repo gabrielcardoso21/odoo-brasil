@@ -49,7 +49,7 @@ class AccountMove(models.Model):
                 errors.append('Destinatário - Razão Social')
             if not partner.street:
                 errors.append('Destinatário / Endereço - Rua')
-            if not partner.l10n_br_number:
+            if not partner.street_number:
                 errors.append('Destinatário / Endereço - Número')
             if not partner.zip or len(re.sub(r"\D", "", partner.zip)) != 8:
                 errors.append('Destinatário / Endereço - CEP')
