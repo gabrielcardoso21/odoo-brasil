@@ -2,6 +2,8 @@
 # Part of Trustcode. See LICENSE file for full copyright and licensing details.
 
 import iugu
+import requests
+import json
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -20,17 +22,25 @@ class WizardChangeIuguInvoice(models.TransientModel):
         if self.date_change:
 
             token = self.env.company.iugu_api_token
-            iugu.config(token=token)
-            iugu_invoice_api = iugu.Invoice()
+            # iugu.config(token=token)
+            # iugu_invoice_api = iugu.Invoice()
 
-            data = iugu_invoice_api.duplicate(self.move_line_id.iugu_id, {
+            vals = {
                 'due_date': self.date_change.strftime('%Y-%m-%d'),
                 'email': self.move_line_id.invoice_id.partner_id.email,
-            })
-            if "errors" in data:
+            }
+            data = requests.post(
+                url=('https://api.iugu.com/v1/invoices/%s/duplicate?api_token=%s' % (self.iugu_id, token)),
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                data=json.dumps(vals),
+            )
+            if not data.ok:
                 msg = "\n".join(
-                    ["A integração com IUGU retornou os seguintes erros"] +
-                    ["%s" % data['errors']])
+                    ["A geração de segunda via no IUGU retornou os seguintes erros"] +
+                    ["%s" % data.json()['errors']])
                 raise UserError(msg)
             self.move_line_id.write({
                 'date_maturity': self.date_change,
