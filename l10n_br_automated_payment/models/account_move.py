@@ -3,6 +3,8 @@
 
 import re
 import iugu
+import requests
+import json
 from datetime import date
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -12,7 +14,7 @@ from odoo import registry as registry_get
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
-    
+
     @api.depends('line_ids')
     def _compute_receivables(self):
         for move in self:
@@ -72,8 +74,8 @@ class AccountMove(models.Model):
             self.env["ir.config_parameter"].sudo().get_param("web.base.url")
         )
         token = self.env.company.iugu_api_token
-        iugu.config(token=token)
-        iugu_invoice_api = iugu.Invoice()
+        # iugu.config(token=token)
+        # iugu_invoice_api = iugu.Invoice()
 
         for moveline in self.financial_move_line_ids:
             self.partner_id.action_synchronize_iugu()
@@ -108,15 +110,24 @@ class AccountMove(models.Model):
                 'early_payment_discount': False,
                 'order_id': transaction.reference,
             }
-            data = iugu_invoice_api.create(vals)
-            if "errors" in data:
-                if isinstance(data['errors'], str):
+            # data = iugu_invoice_api.create(vals)
+            data = requests.post(
+                url=('https://api.iugu.com/v1/invoices?api_token=%s' % token),
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                data=json.dumps(vals),
+            )
+            if not data.ok:
+                error = data.json()["error"]
+                if isinstance(error, str):
                     raise UserError('Erro na integração com IUGU:\n%s' % data['errors'])
 
                 msg = "\n".join(
                     ["A integração com IUGU retornou os seguintes erros"] +
                     ["Field: %s %s" % (x[0], x[1][0])
-                        for x in data['errors'].items()])
+                        for x in error.items()])
                 raise UserError(msg)
 
             transaction.write({
@@ -221,17 +232,23 @@ class AccountMoveLine(models.Model):
     def action_verify_iugu_payment(self):
         if self.iugu_id:
             token = self.env.company.iugu_api_token
-            iugu.config(token=token)
-            iugu_invoice_api = iugu.Invoice()
+            # iugu.config(token=token)
+            # iugu_invoice_api = iugu.Invoice()
 
-            data = iugu_invoice_api.search(self.iugu_id)
-            if "errors" in data:
-                raise UserError(data['errors'])
-            if data.get('status', '') == 'paid' and not self.reconciled:
-                self.iugu_status = data['status']
-                self.action_mark_paid_iugu(data)
+            # data = iugu_invoice_api.search(self.iugu_id)
+            data = requests.post(
+                url=('https://api.iugu.com/v1/invoices/%s?api_token=%s' % (self.iugu_id, token)),
+                headers={
+                    "Accept": "application/json",
+                },
+            )
+            if not data.ok:
+                raise UserError(data.json()["error"])
+            if data.json().get('status', '') == 'paid' and not self.reconciled:
+                self.iugu_status = data.json()['status']
+                self.action_mark_paid_iugu(data.json())
             else:
-                self.iugu_status = data['status']
+                self.iugu_status = data.json()['status']
         else:
             raise UserError('Esta parcela não foi enviada ao IUGU')
 

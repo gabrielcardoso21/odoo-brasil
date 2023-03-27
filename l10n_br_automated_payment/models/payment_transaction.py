@@ -3,6 +3,8 @@
 
 import base64
 import iugu
+import requests
+import json
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 import logging
@@ -12,7 +14,7 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    transaction_url = fields.Char(string="Url de Pagamento", size=256) 
+    transaction_url = fields.Char(string="Url de Pagamento", size=256)
     origin_move_line_id = fields.Many2one('account.move.line')
     date_maturity = fields.Date(string="Data de Vencimento")
     email_sent = fields.Boolean(string="E-mail enviado")
@@ -34,28 +36,40 @@ class PaymentTransaction(models.Model):
         if not self.acquirer_reference:
             raise UserError('Esta transação não foi enviada a nenhum gateway de pagamento')
         token = self.env.company.iugu_api_token
-        iugu.config(token=token)
-        iugu_invoice_api = iugu.Invoice()
+        # iugu.config(token=token)
+        # iugu_invoice_api = iugu.Invoice()
 
-        data = iugu_invoice_api.search(self.acquirer_reference)
-        if "errors" in data:
-            raise UserError(data['errors'])
-        if data.get('status', '') == 'paid' and self.state not in ('done', 'authorized'):
+        # data = iugu_invoice_api.search(self.acquirer_reference)
+        data = requests.post(
+            url=('https://api.iugu.com/v1/invoices/%s?api_token=%s' % (self.acquirer_reference, token)),
+            headers={
+                "Accept": "application/json",
+            },
+        )
+        if not data.ok:
+            raise UserError(data.json()["error"])
+        if data.json().get('status', '') == 'paid' and self.state not in ('done', 'authorized'):
             self._set_transaction_done()
             self._post_process_after_done()
             if self.origin_move_line_id:
                 self.origin_move_line_id._create_bank_tax_move(
-                    (data.get('taxes_paid_cents') or 0) / 100)
+                    (data.json().get('taxes_paid_cents') or 0) / 100)
         else:
-            self.iugu_status = data['status']
+            self.iugu_status = data.json()['status']
 
     def cancel_transaction_in_iugu(self):
         if not self.acquirer_reference:
             raise UserError('Esta parcela não foi enviada ao IUGU')
         token = self.env.company.iugu_api_token
-        iugu.config(token=token)
-        iugu_invoice_api = iugu.Invoice()
-        iugu_invoice_api.cancel(self.acquirer_reference)
+        # iugu.config(token=token)
+        # iugu_invoice_api = iugu.Invoice()
+        # iugu_invoice_api.cancel(self.acquirer_reference)
+        requests.put(
+            url=('https://api.iugu.com/v1/invoices/%s/cancel?api_token=%s' % (self.acquirer_reference, token)),
+            headers={
+                "Accept": "application/json",
+            },
+        )
 
     def action_cancel_transaction(self):
         self._set_transaction_cancel()
