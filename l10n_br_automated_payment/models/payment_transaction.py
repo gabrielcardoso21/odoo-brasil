@@ -47,7 +47,7 @@ class PaymentTransaction(models.Model):
             },
         )
         if not data.ok:
-            raise UserError(data.json()["error"])
+            raise UserError(data.json()["errors"])
         if data.json().get('status', '') == 'paid' and self.state not in ('done', 'authorized'):
             self._set_transaction_done()
             self._post_process_after_done()

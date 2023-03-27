@@ -46,7 +46,7 @@ class ResPartner(models.Model):
                     data=json.dumps(vals),
                 )
                 if not data.ok:
-                    error = data.json()["error"]
+                    error = data.json()["errors"]
                     if isinstance(error, str):
                         msg = "\n".join(
                             ["A integração com IUGU retornou os seguintes erros"] +
@@ -70,7 +70,7 @@ class ResPartner(models.Model):
                     data=json.dumps(vals),
                 )
                 if not data.ok:
-                    error = data.json()["error"]
+                    error = data.json()["errors"]
                     if isinstance(error, str):
                         msg = "\n".join(
                             ["A integração com IUGU retornou os seguintes erros"] +
