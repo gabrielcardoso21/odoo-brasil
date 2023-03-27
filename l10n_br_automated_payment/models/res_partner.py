@@ -49,12 +49,12 @@ class ResPartner(models.Model):
                     error = data.json()["errors"]
                     if isinstance(error, str):
                         msg = "\n".join(
-                            ["A integração com IUGU retornou os seguintes erros"] +
+                            ["A criação de parceiro no IUGU retornou os seguintes erros"] +
                             [data['errors']])
 
                     elif isinstance(error, dict):
                         msg = "\n".join(
-                            ["A integração com IUGU retornou os seguintes erros"] +
+                            ["A criação de parceiro no IUGU retornou os seguintes erros"] +
                             ["Field: %s %s" % (x[0], x[1][0])
                              for x in error.items()])
 
@@ -73,12 +73,12 @@ class ResPartner(models.Model):
                     error = data.json()["errors"]
                     if isinstance(error, str):
                         msg = "\n".join(
-                            ["A integração com IUGU retornou os seguintes erros"] +
+                            ["A alteração de parceiro no IUGU retornou os seguintes erros"] +
                             [data.json()['errors']])
 
                     elif isinstance(error, dict):
                         msg = "\n".join(
-                            ["A integração com IUGU retornou os seguintes erros"] +
+                            ["A alteração de parceiro no IUGU retornou os seguintes erros"] +
                             ["Field: %s %s" % (x[0], x[1][0])
                              for x in error.items()])
 

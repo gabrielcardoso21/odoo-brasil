@@ -122,10 +122,10 @@ class AccountMove(models.Model):
             if not data.ok:
                 error = data.json()["errors"]
                 if isinstance(error, str):
-                    raise UserError('Erro na integração com IUGU:\n%s' % data['errors'])
+                    raise UserError('Erro na criação de invoice no IUGU:\n%s' % data['errors'])
 
                 msg = "\n".join(
-                    ["A integração com IUGU retornou os seguintes erros"] +
+                    ["A criação de invoice no IUGU retornou os seguintes erros"] +
                     ["Field: %s %s" % (x[0], x[1][0])
                         for x in error.items()])
                 raise UserError(msg)
@@ -243,7 +243,7 @@ class AccountMoveLine(models.Model):
                 },
             )
             if not data.ok:
-                raise UserError(data.json()["errors"])
+                raise UserError("A busca de invoice no IUGU retornou os seguintes erros\n%s" % data.json()["errors"])
             if data.json().get('status', '') == 'paid' and not self.reconciled:
                 self.iugu_status = data.json()['status']
                 self.action_mark_paid_iugu(data.json())
