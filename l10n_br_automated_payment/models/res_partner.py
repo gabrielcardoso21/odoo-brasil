@@ -74,7 +74,7 @@ class ResPartner(models.Model):
                     if isinstance(error, str):
                         msg = "\n".join(
                             ["A integração com IUGU retornou os seguintes erros"] +
-                            [data['errors']])
+                            [data.json()['errors']])
 
                     elif isinstance(error, dict):
                         msg = "\n".join(
