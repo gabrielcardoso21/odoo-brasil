@@ -40,7 +40,7 @@ class PaymentTransaction(models.Model):
         # iugu_invoice_api = iugu.Invoice()
 
         # data = iugu_invoice_api.search(self.acquirer_reference)
-        data = requests.post(
+        data = requests.get(
             url=('https://api.iugu.com/v1/invoices/%s?api_token=%s' % (self.acquirer_reference, token)),
             headers={
                 "Accept": "application/json",
