@@ -15,6 +15,17 @@ from odoo import registry as registry_get
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    def _get_default_policy(self):
+        if self.env.context.get('default_type', '') == 'out_invoice':
+            return 'directly'
+        if self.env.context.get('default_type', '') == 'in_invoice':
+            return 'manually'
+
+    l10n_br_edoc_policy = fields.Selection(
+        [('directly', 'Emitir agora'),
+         ('after_payment', 'Emitir após pagamento'),
+         ('manually', 'Manualmente')], string="Nota Eletrônica", default=_get_default_policy)
+
     @api.depends('line_ids')
     def _compute_receivables(self):
         for move in self:
