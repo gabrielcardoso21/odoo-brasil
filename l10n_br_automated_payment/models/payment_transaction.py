@@ -55,7 +55,7 @@ class PaymentTransaction(models.Model):
                 self.origin_move_line_id._create_bank_tax_move(
                     (data.json().get('taxes_paid_cents') or 0) / 100)
         else:
-            self.iugu_status = data.json()['status']
+            self.origin_move_line_id.iugu_status = data.json()['status']
 
     def cancel_transaction_in_iugu(self):
         if not self.acquirer_reference:
