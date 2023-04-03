@@ -131,14 +131,14 @@ class AccountMove(models.Model):
                 raise UserError(msg)
 
             transaction.write({
-                'acquirer_reference': data['id'],
-                'transaction_url': data['secure_url'],
+                'acquirer_reference': data.json()['id'],
+                'transaction_url': data.json()['secure_url'],
             })
             moveline.write({
-                'iugu_id': data['id'],
-                'iugu_secure_payment_url': data['secure_url'],
-                'iugu_digitable_line': data['bank_slip']['digitable_line'],
-                'iugu_barcode_url': data['bank_slip']['barcode'],
+                'iugu_id': data.json()['id'],
+                'iugu_secure_payment_url': data.json()['secure_url'],
+                'iugu_digitable_line': data.json()['bank_slip']['digitable_line'],
+                'iugu_barcode_url': data.json()['bank_slip']['barcode'],
             })
 
     def generate_payment_transactions(self):
