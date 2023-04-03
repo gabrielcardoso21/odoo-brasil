@@ -22,7 +22,7 @@ class AccountMove(models.Model):
             return 'manually'
 
     l10n_br_edoc_policy = fields.Selection(
-        [('directly', 'Emitir agora'),
+        selection=[('directly', 'Emitir agora'),
          ('after_payment', 'Emitir após pagamento'),
          ('manually', 'Manualmente')], string="Nota Eletrônica", default=_get_default_policy)
 
