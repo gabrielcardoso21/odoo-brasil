@@ -122,7 +122,7 @@ class AccountMove(models.Model):
             if not data.ok:
                 error = data.json()["errors"]
                 if isinstance(error, str):
-                    raise UserError('Erro na criação de invoice no IUGU:\n%s' % data['errors'])
+                    raise UserError('Erro na criação de invoice no IUGU:\n%s' % error)
 
                 msg = "\n".join(
                     ["A criação de invoice no IUGU retornou os seguintes erros"] +
