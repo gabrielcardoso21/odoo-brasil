@@ -61,7 +61,7 @@ class ResPartner(models.Model):
                     raise UserError(msg)
                 partner.iugu_id = data.json()['id']
             else:
-                data = requests.post(
+                data = requests.put(
                     url=('https://api.iugu.com/v1/customers/%s?api_token=%s' % (partner.iugu_id, token)),
                     headers={
                         "Content-Type": "application/json",
