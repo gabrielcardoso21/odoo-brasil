@@ -196,7 +196,7 @@ class AccountMoveLine(models.Model):
             'partner_id': self.partner_id.id,
             'debit': 0.0,
             'credit': bank_taxes,
-            'account_id': journal.default_account_id.id,
+            'account_id': journal.payment_debit_account_id.id,
         }
         debit_aml_dict = {
             'name': ref,
