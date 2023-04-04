@@ -186,7 +186,7 @@ class AccountMoveLine(models.Model):
             'date': date.today(),
             'ref': ref,
             'currency_id': currency.id,
-            'type': 'entry',
+            'move_type': 'entry',
         })
         aml_obj = self.env['account.move.line'].with_context(
             check_move_validity=False)
@@ -196,7 +196,7 @@ class AccountMoveLine(models.Model):
             'partner_id': self.partner_id.id,
             'debit': 0.0,
             'credit': bank_taxes,
-            'account_id': journal.default_debit_account_id.id,
+            'account_id': journal.default_account_id.id,
         }
         debit_aml_dict = {
             'name': ref,
