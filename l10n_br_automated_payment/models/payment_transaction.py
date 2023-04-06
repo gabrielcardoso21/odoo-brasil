@@ -51,11 +51,13 @@ class PaymentTransaction(models.Model):
         if data.json().get('status', '') == 'paid' and self.state not in ('done', 'authorized'):
             self._set_transaction_done()
             self._post_process_after_done()
-            if self.origin_move_line_id:
-                self.origin_move_line_id._create_bank_tax_move(
-                    (data.json().get('taxes_paid_cents') or 0) / 100)
-        else:
-            self.origin_move_line_id.iugu_status = data.json()['status']
+            # if self.origin_move_line_id:
+            #     self.origin_move_line_id._create_bank_tax_move(
+            #         (data.json().get('taxes_paid_cents') or 0) / 100)
+        # else:
+        #     self.origin_move_line_id.iugu_status = data.json()['status']
+        if self.origin_move_line_id:
+            self.origin_move_line_id.action_verify_iugu_payment()
 
     def cancel_transaction_in_iugu(self):
         if not self.acquirer_reference:
