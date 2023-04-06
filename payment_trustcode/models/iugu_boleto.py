@@ -1,6 +1,8 @@
 import re
 import logging
 import datetime
+import requests
+import json
 
 from odoo import api, fields, models
 from odoo.http import request
@@ -66,9 +68,18 @@ class IuguBoleto(models.Model):
             },
         }
 
-        iugu.config(token=self.iugu_api_key)
-        invoice = iugu.Invoice()
-        result = invoice.create(invoice_data)
+        # iugu.config(token=self.iugu_api_key)
+        # invoice = iugu.Invoice()
+        # result = invoice.create(invoice_data)
+        data = requests.post(
+            url=('https://api.iugu.com/v1/invoices?api_token=%s' % token),
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            data=json.dumps(invoice_data),
+        )
+        result = data.json()
         if "errors" in result:
             if isinstance(result["errors"], str):
                 msg = result['errors']
