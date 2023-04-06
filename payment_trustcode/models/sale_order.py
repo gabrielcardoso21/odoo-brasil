@@ -1,4 +1,5 @@
 import logging
+import requests
 from odoo import models
 
 _logger = logging.getLogger(__name__)
@@ -20,8 +21,16 @@ class SaleOrder(models.Model):
                     transaction_id
                     and transaction_id.acquirer_id.provider == "iugu"
                 ):
-                    iugu.config(token=transaction_id.acquirer_id.iugu_api_key)
-                    invoice_api = iugu.Invoice()
-                    invoice_api.cancel(transaction_id.acquirer_reference)
+                    # iugu.config(token=transaction_id.acquirer_id.iugu_api_key)
+                    # invoice_api = iugu.Invoice()
+                    # invoice_api.cancel(transaction_id.acquirer_reference)
+                    requests.put(
+                        url=('https://api.iugu.com/v1/invoices/%s/cancel?api_token=%s'
+                              % (transaction_id.acquirer_reference,
+                                 transaction_id.acquirer_id.iugu_api_key)),
+                        headers={
+                            "Accept": "application/json",
+                        },
+                    )
 
         return res
