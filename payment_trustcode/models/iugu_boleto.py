@@ -72,7 +72,7 @@ class IuguBoleto(models.Model):
         # invoice = iugu.Invoice()
         # result = invoice.create(invoice_data)
         data = requests.post(
-            url=('https://api.iugu.com/v1/invoices?api_token=%s' % token),
+            url=('https://api.iugu.com/v1/invoices?api_token=%s' % self.iugu_api_key),
             headers={
                 "Content-Type": "application/json",
                 "Accept": "application/json",
