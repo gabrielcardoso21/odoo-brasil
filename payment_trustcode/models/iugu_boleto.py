@@ -56,11 +56,11 @@ class IuguBoleto(models.Model):
             "items": items,
             "payer": {
                 "name": partner_id.name,
-                "cpf_cnpj": partner_id.l10n_br_cnpj_cpf,
+                "cpf_cnpj": partner_id.cnpj_cpf,
                 "address": {
                     "street": partner_id.street,
                     "city": partner_id.city_id.name,
-                    "number": partner_id.l10n_br_number,
+                    "number": partner_id.street_number,
                     "zip_code": re.sub('[^0-9]', '', partner_id.zip or ''),
                 },
             },
