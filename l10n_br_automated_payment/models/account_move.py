@@ -58,7 +58,7 @@ class AccountMove(models.Model):
             partner = invoice.partner_id.commercial_partner_id
             if not self.env.company.iugu_api_token:
                 errors.append('Configure o token de API')
-            if partner.is_company and not partner.l10n_br_legal_name:
+            if partner.is_company and not partner.legal_name:
                 errors.append('Destinatário - Razão Social')
             if not partner.street:
                 errors.append('Destinatário / Endereço - Rua')
@@ -68,7 +68,7 @@ class AccountMove(models.Model):
                 errors.append('Destinatário / Endereço - CEP')
             if not partner.state_id:
                 errors.append(u'Destinatário / Endereço - Estado')
-            if not partner.city_id:
+            if not partner.city_id and not partner.city:
                 errors.append(u'Destinatário / Endereço - Município')
             if not partner.country_id:
                 errors.append(u'Destinatário / Endereço - País')

@@ -31,7 +31,7 @@ class ResPartner(models.Model):
                 'zip_code': re.sub('[^0-9]', '', commercial_part.zip or ''),
                 'number': commercial_part.street_number,
                 'street': commercial_part.street_name,
-                'city': commercial_part.city_id.name,
+                'city': commercial_part.city_id and commercial_part.city_id.name or commercial_part.city,
                 'state': commercial_part.state_id.code,
                 'district': commercial_part.district or '',
                 'complement': commercial_part.street2 or '',
