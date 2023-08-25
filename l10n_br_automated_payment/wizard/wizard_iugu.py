@@ -27,7 +27,7 @@ class WizardChangeIuguInvoice(models.TransientModel):
 
             vals = {
                 'due_date': self.date_change.strftime('%Y-%m-%d'),
-                'email': self.move_line_id.invoice_id.partner_id.email,
+                'email': self.move_line_id.move_id.partner_id.email,
             }
             data = requests.post(
                 url=('https://api.iugu.com/v1/invoices/%s/duplicate?api_token=%s' % (self.iugu_id, token)),
