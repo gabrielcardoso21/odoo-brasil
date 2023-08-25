@@ -125,3 +125,6 @@ class PaymentTransaction(models.Model):
         for bank_slip in bank_slip_queue:
             bank_slip.send_email_bank_slip()
             bank_slip.email_sent = True
+
+    def open_wizard_change_date(self):
+        return self.origin_move_line_id.open_wizard_change_date()
