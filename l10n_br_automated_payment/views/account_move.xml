@@ -20,6 +20,8 @@
                             <field name="date_maturity"/>
                             <field name="amount"/>
                             <field name="transaction_url" widget="url"/>
+                            <button name="open_wizard_change_date" string="Alterar" type="object"
+                                class="btn btn-success btn-sm" />
                             <button name="action_verify_transaction" string="Verificar" type="object"
                                 class="btn btn-success btn-sm" />
                             <button name="action_cancel_transaction" string="Cancelar" type="object"
