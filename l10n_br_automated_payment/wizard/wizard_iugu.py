@@ -30,7 +30,7 @@ class WizardChangeIuguInvoice(models.TransientModel):
                 'email': self.move_line_id.move_id.partner_id.email,
             }
             data = requests.post(
-                url=('https://api.iugu.com/v1/invoices/%s/duplicate?api_token=%s' % (self.iugu_id, token)),
+                url=('https://api.iugu.com/v1/invoices/%s/duplicate?api_token=%s' % (self.move_line_id.iugu_id, token)),
                 headers={
                     "Content-Type": "application/json",
                     "Accept": "application/json",
