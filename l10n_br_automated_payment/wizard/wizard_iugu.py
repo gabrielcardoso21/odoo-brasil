@@ -50,3 +50,7 @@ class WizardChangeIuguInvoice(models.TransientModel):
                 'iugu_digitable_line': data['bank_slip']['digitable_line'],
                 'iugu_barcode_url': data['bank_slip']['barcode'],
             })
+            self.env['payment.transaction'].search([('origin_move_line_id', '=', self.move_line_id.id)]).write({
+                'transaction_url': data['secure_url'],
+                'date_maturity': self.date_change,
+            })
