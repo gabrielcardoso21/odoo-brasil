@@ -42,6 +42,7 @@ class WizardChangeIuguInvoice(models.TransientModel):
                     ["A geração de segunda via no IUGU retornou os seguintes erros"] +
                     ["%s" % data.json()['errors']])
                 raise UserError(msg)
+            data = data.json()
             self.move_line_id.write({
                 'date_maturity': self.date_change,
                 'iugu_id': data['id'],
