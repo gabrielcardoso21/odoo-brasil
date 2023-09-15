@@ -176,6 +176,11 @@ class AccountMove(models.Model):
         self.generate_payment_transactions()
         return result
 
+    def button_cancel(self):
+        super().button_cancel()
+        for transaction in self.transaction_ids:
+            transaction.action_cancel_transaction()
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
