@@ -131,15 +131,29 @@ class AccountMove(models.Model):
                 data=json.dumps(vals),
             )
             if not data.ok:
+                jump = False
                 error = data.json()["errors"]
                 if isinstance(error, str):
-                    raise UserError('Erro na criação de invoice no IUGU:\n%s' % error)
+                    if 'invoice_id' in error:
+                        vals['order_id'] += '-1'
+                        data = requests.post(
+                            url=('https://api.iugu.com/v1/invoices?api_token=%s' % token),
+                            headers={
+                                "Content-Type": "application/json",
+                                "Accept": "application/json",
+                            },
+                            data=json.dumps(vals),
+                        )
+                        jump = True
+                    else:
+                        raise UserError('Erro na criação de invoice no IUGU:\n%s' % error)
 
                 msg = "\n".join(
                     ["A criação de invoice no IUGU retornou os seguintes erros"] +
                     ["Field: %s %s" % (x[0], x[1][0])
                         for x in error.items()])
-                raise UserError(msg)
+                if not jump:
+                    raise UserError(msg)
 
             transaction.write({
                 'acquirer_reference': data.json()['id'],
