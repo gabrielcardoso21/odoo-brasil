@@ -148,11 +148,11 @@ class AccountMove(models.Model):
                     else:
                         raise UserError('Erro na criação de invoice no IUGU:\n%s' % error)
 
-                msg = "\n".join(
-                    ["A criação de invoice no IUGU retornou os seguintes erros"] +
-                    ["Field: %s %s" % (x[0], x[1][0])
-                        for x in error.items()])
                 if not jump:
+                    msg = "\n".join(
+                        ["A criação de invoice no IUGU retornou os seguintes erros"] +
+                        ["Field: %s %s" % (x[0], x[1][0])
+                            for x in error.items()])
                     raise UserError(msg)
 
             transaction.write({
